@@ -1,0 +1,22 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  update-rollbar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy to Rollbar
+        run: | 
+          curl --request POST \
+               --url https://api.rollbar.com/api/1/deploy \
+               --header 'X-Rollbar-Access-Token: yourtokenhere' \
+               --header 'accept: application/json' \
+               --header 'content-type: application/json' \
+               --data '{
+               "environment": "production",
+               "revision": "${{ github.sha }}",
+               "local_username": "${{ github.actor }}",
+               "status": "succeeded"
+               }'
